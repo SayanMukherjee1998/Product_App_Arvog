@@ -11,10 +11,12 @@ connectDB();
 const app = express();
 
 // Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
-app.use(express.json());
+
 
 // Routes
 app.use("/api", require("./routes/index"));

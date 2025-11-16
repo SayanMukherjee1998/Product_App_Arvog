@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const productController = require("../controllers/productController");
-
+const bulkUploadController = require("../controllers/bulkUploadController");
+const exportController = require("../controllers/exportController");
 const validate = require("../middleware/validateQuery");
+const upload = require("../middleware/upload");
 
 const {
   createProductSchema,
@@ -26,10 +28,12 @@ router.put("/:id", validate(updateProductSchema), productController.update);
 router.delete("/:id", validate(getProductByIdSchema, "params"), productController.remove);
 
 // ADVANCED LIST
-router.get(
-  "/advanced/list",
-  validate(productListQuerySchema),
-  productController.getAdvancedList
-);
+router.get("/advanced/list",validate(productListQuerySchema),productController.getAdvancedList);
+// Add at bottom or wherever suitable
+router.post("/bulk/upload",upload.single("file"),bulkUploadController.bulkUpload);
+
+//To export products
+router.get("/export/bulk", exportController.exportProducts);
+
 
 module.exports = router;
