@@ -1,0 +1,13 @@
+<mat-card>
+  <mat-card-title>Categories</mat-card-title>
+  <mat-card-content>
+    <button mat-flat-button color="primary" routerLink="/categories/new">Create</button>
+    <mat-list>
+      <mat-list-item *ngFor="let c of categories">
+        <div class="mat-list-text">{{ c.name }} <small>{{ c.slug }}</small></div>
+        <button mat-icon-button [routerLink]="['/categories', c._id]"><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button (click)="delete(c._id)"><mat-icon>delete</mat-icon></button>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

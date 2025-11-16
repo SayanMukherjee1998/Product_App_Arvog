@@ -1,0 +1,23 @@
+<mat-card>
+  <mat-card-title>{{ id ? 'Edit' : 'Create' }} Category</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <mat-form-field class="full">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+
+      <mat-form-field class="full">
+        <mat-label>Slug</mat-label>
+        <input matInput formControlName="slug" />
+      </mat-form-field>
+
+      <mat-form-field class="full">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" type="submit">Save</button>
+    </form>
+  </mat-card-content>
+</mat-card>

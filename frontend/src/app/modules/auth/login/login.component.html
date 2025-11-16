@@ -1,0 +1,30 @@
+<div class="login-wrap">
+  <mat-card class="login-card">
+    <mat-card-title>Sign in</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="you@example.com" formControlName="email" />
+          <mat-error *ngIf="form.controls.email.invalid && form.controls.email.touched">
+            Valid email required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" placeholder="••••••" formControlName="password" />
+          <mat-error *ngIf="form.controls.password.invalid && form.controls.password.touched">
+            Password required
+          </mat-error>
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-flat-button color="primary" type="submit" [disabled]="loading || form.invalid">
+            Login
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
