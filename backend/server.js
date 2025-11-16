@@ -19,6 +19,8 @@ app.use(morgan("dev"));
 
 
 // Routes
+app.use(require("cookie-parser")());
+app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api", require("./routes/index"));
 
 // Default route
