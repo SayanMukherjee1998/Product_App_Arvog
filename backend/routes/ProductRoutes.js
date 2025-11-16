@@ -1,9 +1,14 @@
 const router = require("express").Router();
+
 const productController = require("../controllers/productController");
 const bulkUploadController = require("../controllers/bulkUploadController");
 const exportController = require("../controllers/exportController");
+
 const validate = require("../middleware/validateQuery");
 const upload = require("../middleware/upload");
+
+const auth = require("../middleware/authMiddleware");
+const requireRole = require("../middleware/requireRole");
 
 const {
   createProductSchema,
@@ -12,28 +17,69 @@ const {
   productListQuerySchema
 } = require("../validators/productValidators");
 
-// CREATE
-router.post("/", validate(createProductSchema), productController.create);
 
-// GET ALL
+//   PUBLIC ROUTES
+
+
+// GET ALL (public)
 router.get("/", productController.getAll);
 
-// GET BY ID
+// GET BY ID (public)
 router.get("/:id", validate(getProductByIdSchema, "params"), productController.getById);
 
-// UPDATE
-router.put("/:id", validate(updateProductSchema), productController.update);
+// ADVANCED LIST (public)
+router.get(
+  "/advanced/list",
+  validate(productListQuerySchema),
+  productController.getAdvancedList
+);
 
-// DELETE
-router.delete("/:id", validate(getProductByIdSchema, "params"), productController.remove);
 
-// ADVANCED LIST
-router.get("/advanced/list",validate(productListQuerySchema),productController.getAdvancedList);
-// Add at bottom or wherever suitable
-router.post("/bulk/upload",upload.single("file"),bulkUploadController.bulkUpload);
+//   PROTECTED ROUTES (JWT REQUIRED)
 
-//To export products
-router.get("/export/bulk", exportController.exportProducts);
 
+// CREATE PRODUCT → admin/manager only
+router.post(
+  "/",
+  auth,
+  requireRole("admin", "manager"),
+  validate(createProductSchema),
+  productController.create
+);
+
+// UPDATE PRODUCT → admin only
+router.put(
+  "/:id",
+  auth,
+  requireRole("admin"),
+  validate(updateProductSchema),
+  productController.update
+);
+
+// DELETE PRODUCT → admin only
+router.delete(
+  "/:id",
+  auth,
+  requireRole("admin"),
+  validate(getProductByIdSchema, "params"),
+  productController.remove
+);
+
+// BULK UPLOAD (CSV/XLSX) → admin only
+router.post(
+  "/bulk/upload",
+  auth,
+  requireRole("admin"),
+  upload.single("file"),
+  bulkUploadController.bulkUpload
+);
+
+// EXPORT PRODUCTS → admin/manager only
+router.get(
+  "/export/bulk",
+  auth,
+  requireRole("admin", "manager"),
+  exportController.exportProducts
+);
 
 module.exports = router;
